@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "UnityGameStudy/1.0.0": {
+        "runtime": {
+          "UnityGameStudy.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "UnityGameStudy/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
