@@ -35,3 +35,4 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Maze/bin/Debug/net5.0/Maze.dll
