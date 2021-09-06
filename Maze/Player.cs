@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityGameStudy
+namespace Maze
 {
     class Player
     {

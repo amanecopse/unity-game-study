@@ -6,15 +6,15 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "UnityGameStudy/1.0.0": {
+      "Maze/1.0.0": {
         "runtime": {
-          "UnityGameStudy.dll": {}
+          "Maze.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "UnityGameStudy/1.0.0": {
+    "Maze/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
