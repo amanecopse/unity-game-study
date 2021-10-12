@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 transform.position += move;
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);
             }
         }
     }
