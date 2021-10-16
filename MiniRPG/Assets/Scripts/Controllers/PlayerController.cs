@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using TMPro.EditorUtilities;
 using UnityEngine;
 
@@ -7,9 +8,14 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     int _speed = 10;
-
-    bool _moveToDest = false;
     Vector3 _dest;
+    PlayerState _state = PlayerState.Idle;
+    public enum PlayerState
+    {
+        Die,
+        Moving,
+        Idle,
+    }
 
     void Start()
     {
@@ -19,23 +25,50 @@ public class PlayerController : MonoBehaviour
         Manager.Input.MouseAction += OnMouseClicked;
     }
 
+    void UpdateDie()
+    {
+
+    }
+    void UpdateMoving()
+    {
+        float dist = (_dest - transform.position).magnitude;
+        Vector3 dir = (_dest - transform.position).normalized;
+        Vector3 move = Mathf.Clamp(_speed * Time.deltaTime, 0, dist) * dir;
+
+        if (dist < 0.0001f)
+        {
+            _state = PlayerState.Idle;
+        }
+        else
+        {
+            transform.position += move;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);
+        }
+
+        //애니메이션
+        Animator anim = GetComponent<Animator>();
+        anim.SetFloat("speed", _speed);
+    }
+    void UpdateIdle()
+    {
+        //애니메이션
+        Animator anim = GetComponent<Animator>();
+        anim.SetFloat("speed", 0);
+    }
+
     void Update()
     {
-        if (_moveToDest)
+        switch (_state)
         {
-            float dist = (_dest - transform.position).magnitude;
-            Vector3 dir = (_dest - transform.position).normalized;
-            Vector3 move = Mathf.Clamp(_speed * Time.deltaTime, 0, dist) * dir;
-
-            if (dist < 0.0001f)
-            {
-                _moveToDest = false;
-            }
-            else
-            {
-                transform.position += move;
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);
-            }
+            case PlayerState.Die:
+                UpdateDie();
+                break;
+            case PlayerState.Moving:
+                UpdateMoving();
+                break;
+            case PlayerState.Idle:
+                UpdateIdle();
+                break;
         }
     }
 
@@ -77,7 +110,10 @@ public class PlayerController : MonoBehaviour
 
     void OnMouseClicked(Define.MouseEvent mouseEvent)
     {
-        if (mouseEvent != Define.MouseEvent.Click)
+        // if (mouseEvent != Define.MouseEvent.Click)
+        //     return;
+
+        if (_state == PlayerState.Die)
             return;
 
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
@@ -87,7 +123,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out raycastHit, 100.0f, LayerMask.GetMask("Wall")))
         {
             _dest = raycastHit.point;
-            _moveToDest = true;
+            _state = PlayerState.Moving;
         }
     }
 }
