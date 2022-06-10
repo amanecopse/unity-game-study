@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        Manager.UI.ShowSceneUI<UI_Inven>("UI_Inven");
+
         Manager.Input.KeyAction -= OnKeyBoard;
         Manager.Input.KeyAction += OnKeyBoard;
         Manager.Input.MouseAction -= OnMouseClicked;

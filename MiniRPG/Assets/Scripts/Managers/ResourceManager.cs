@@ -19,7 +19,13 @@ public class ResourceManager
             Debug.Log($"Failed to load prefab: {path}");
             return null;
         }
-        return UnityEngine.Object.Instantiate(prefab, parent);
+        GameObject go = UnityEngine.Object.Instantiate(prefab, parent);
+        int idx = go.name.IndexOf("(Clone)");
+        if (idx > 0)
+        {
+            go.name = go.name.Substring(0, idx);
+        }
+        return go;
     }
 
     public void Destroy(GameObject go, float time = 0.0f)
