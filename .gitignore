@@ -35,11 +35,3 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-*.meta
-Maze/bin/Debug/net5.0/Maze.dll
-
-
-# my
-*.log
-MiniRPG/Assets/VSCode/Plugins/Editor/VSCode.cs
-MiniRPG/Logs/
