@@ -7,12 +7,17 @@ public class SceneManagerEx
 
     public void LoadScene(Define.Scene sceneType)
     {
-        CurrentScene.Close();
+        Manager.Close();
         SceneManager.LoadScene(GetSceneName(sceneType));
     }
 
     string GetSceneName(Define.Scene sceneType)
     {
         return System.Enum.GetName(typeof(Define.Scene), sceneType);
+    }
+
+    public void Close()
+    {
+        CurrentScene.Close();
     }
 }

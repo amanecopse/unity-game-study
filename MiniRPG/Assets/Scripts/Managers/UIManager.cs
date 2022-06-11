@@ -6,7 +6,7 @@ using UnityEngine;
 public class UIManager
 {
     Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
-    UI_Scene sceneUI;
+    UI_Scene _sceneUI;
     int _order = 10;
     GameObject Root
     {
@@ -62,9 +62,10 @@ public class UIManager
         if (string.IsNullOrEmpty(prefabName))
             prefabName = typeof(T).Name;
         GameObject go = Manager.Resource.Instantiate($"UI/UI_Scene/{prefabName}", Root.transform);
-        T SceneUI = Util.GetOrAddComponent<T>(go);
+        T sceneUI = Util.GetOrAddComponent<T>(go);
+        _sceneUI = sceneUI;
         //만약 위에서 Root.tramsform을 부모로 지정 안했으면 go.transform.SetParent(Root.transform);
-        return SceneUI;
+        return sceneUI;
     }
 
     public void ClosePopupUI(UI_Popup popupUI)
@@ -87,5 +88,17 @@ public class UIManager
         UI_Popup popupUI = _popupStack.Pop();
         Manager.Resource.Destroy(popupUI.gameObject);
         _order--;
+    }
+
+    public void CloseAllPopupUI()
+    {
+        while (_popupStack.Count > 0)
+            ClosePopupUI();
+    }
+
+    public void Close()
+    {
+        CloseAllPopupUI();
+        _sceneUI = null;
     }
 }
