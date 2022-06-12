@@ -8,12 +8,14 @@ public class Manager : MonoBehaviour
     static Manager instance { get { Init(); return s_manager; } }
 
     InputManager _input = new InputManager();
+    PoolManager _pool = new PoolManager();
     ResourceManager _resource = new ResourceManager();
     SceneManagerEx _scene = new SceneManagerEx();
     UIManager _UI = new UIManager();
     SoundManager _sound = new SoundManager();
 
     public static InputManager Input { get { return instance._input; } }
+    public static PoolManager Pool { get { return instance._pool; } }
     public static ResourceManager Resource { get { return instance._resource; } }
     public static SceneManagerEx Scene { get { return instance._scene; } }
     public static UIManager UI { get { return instance._UI; } }
@@ -44,12 +46,14 @@ public class Manager : MonoBehaviour
             s_manager = gameObject.GetComponent<Manager>();
 
             s_manager._sound.Init();
+            s_manager._pool.Init();
         }
     }
 
     public static void Close()
     {
         Input.Close();
+        Pool.Close();
         Scene.Close();
         Sound.Close();
         UI.Close();
