@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using TMPro.EditorUtilities;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -33,15 +34,23 @@ public class PlayerController : MonoBehaviour
     {
         float dist = (_dest - transform.position).magnitude;
         Vector3 dir = (_dest - transform.position).normalized;
-        Vector3 move = Mathf.Clamp(_speed * Time.deltaTime, 0, dist) * dir;
 
-        if (dist < 0.0001f)
+        if (dist < 0.1f)
         {
             _state = PlayerState.Idle;
         }
         else
         {
-            transform.position += move;
+            Vector3 moveDist = Mathf.Clamp(_speed * Time.deltaTime, 0, dist) * dir;
+            NavMeshAgent nav = gameObject.GetComponent<NavMeshAgent>();
+            nav.Move(moveDist);
+
+            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, dir, 1.0f, LayerMask.GetMask("Block")))
+            {
+                _state = PlayerState.Idle;
+                return;
+            }
+
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);
         }
 
