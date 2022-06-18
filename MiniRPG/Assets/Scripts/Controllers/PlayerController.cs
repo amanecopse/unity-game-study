@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     int _speed = 10;
     Vector3 _dest;
     PlayerState _state = PlayerState.Idle;
+
     public enum PlayerState
     {
         Die,
@@ -22,8 +23,8 @@ public class PlayerController : MonoBehaviour
     {
         Manager.Input.KeyAction -= OnKeyBoard;
         Manager.Input.KeyAction += OnKeyBoard;
-        Manager.Input.MouseAction -= OnMouseClicked;
-        Manager.Input.MouseAction += OnMouseClicked;
+        Manager.Input.MouseAction -= OnMouseEvent;
+        Manager.Input.MouseAction += OnMouseEvent;
     }
 
     void UpdateDie()
@@ -47,7 +48,8 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(transform.position + Vector3.up * 0.5f, dir, 1.0f, LayerMask.GetMask("Block")))
             {
-                _state = PlayerState.Idle;
+                if (Input.GetMouseButton(0) == false)
+                    _state = PlayerState.Idle;
                 return;
             }
 
@@ -117,22 +119,39 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnMouseClicked(Define.MouseEvent mouseEvent)
+    GameObject _targetObject = null;
+    int _mouseMoveMask = (1 << (int)Define.Layer.Monster) | (1 << (int)Define.Layer.Ground);
+    void OnMouseEvent(Define.MouseEvent mouseEvent)
     {
-        // if (mouseEvent != Define.MouseEvent.Click)
-        //     return;
-
         if (_state == PlayerState.Die)
             return;
 
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
         RaycastHit raycastHit;
+        bool isHit = Physics.Raycast(ray, out raycastHit, 100.0f, _mouseMoveMask);
         Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
-
-        if (Physics.Raycast(ray, out raycastHit, 100.0f, LayerMask.GetMask("Wall")))
+        switch (mouseEvent)
         {
-            _dest = raycastHit.point;
-            _state = PlayerState.Moving;
+            case Define.MouseEvent.PointerDown:
+                if (isHit)
+                {
+                    if (raycastHit.transform.gameObject.layer == (int)Define.Layer.Ground)
+                        _targetObject = null;
+                    else if (raycastHit.transform.gameObject.layer == (int)Define.Layer.Monster)
+                        _targetObject = raycastHit.transform.gameObject;
+                    _dest = raycastHit.point;
+                    _state = PlayerState.Moving;
+                }
+                break;
+            case Define.MouseEvent.Press:
+                if (_targetObject != null)
+                    _dest = _targetObject.transform.position;
+                else if (isHit)
+                    _dest = raycastHit.point;
+                break;
+            case Define.MouseEvent.PointerUp:
+                _targetObject = null;
+                break;
         }
     }
 }

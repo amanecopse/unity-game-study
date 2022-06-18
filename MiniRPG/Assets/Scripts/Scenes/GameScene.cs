@@ -9,6 +9,8 @@ public class GameScene : BaseScene
         base.Init();
         SceneType = Define.Scene.Login;
         Manager.UI.ShowSceneUI<UI_Inven>("UI_Inven");
+
+        gameObject.GetOrAddComponent<CursorController>();
     }
 
     public override void Close()
