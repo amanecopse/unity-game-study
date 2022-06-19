@@ -42,10 +42,7 @@ public class InputManager
                     {
                         MouseAction.Invoke(Define.MouseEvent.Click);
                     }
-                    else
-                    {
-                        MouseAction.Invoke(Define.MouseEvent.PointerUp);
-                    }
+                    MouseAction.Invoke(Define.MouseEvent.PointerUp);
 
                 }
                 _pressedTime = 0;

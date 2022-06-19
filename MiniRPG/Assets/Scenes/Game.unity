@@ -13276,6 +13276,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4752485187100655999, guid: 986dc383ad501f843a817f8a122f9a27, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8225504196132904260, guid: 986dc383ad501f843a817f8a122f9a27, type: 3}
       propertyPath: m_Name
       value: UnityChan
