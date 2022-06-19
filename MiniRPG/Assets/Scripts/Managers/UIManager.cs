@@ -37,13 +37,23 @@ public class UIManager
         }
     }
 
+    public T MakeWorldSpaceUI<T>(string prefabName = null, Transform parent = null) where T : UI_Base
+    {
+        if (string.IsNullOrEmpty(prefabName))
+            prefabName = typeof(T).Name;
+        GameObject go = Manager.Resource.Instantiate($"UI/WorldSpace/{prefabName}", parent);
+        Canvas canvas = go.GetOrAddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.worldCamera = Camera.main;
+        return go.GetOrAddComponent<T>();
+    }
+
     public T MakeSubItemUI<T>(string prefabName = null, Transform parent = null) where T : UI_Base
     {
         if (string.IsNullOrEmpty(prefabName))
             prefabName = typeof(T).Name;
         GameObject go = Manager.Resource.Instantiate($"UI/UI_SubItem/{prefabName}", parent);
-        T subItemUI = Util.GetOrAddComponent<T>(go);
-        return subItemUI;
+        return go.GetOrAddComponent<T>();
     }
 
     public T ShowPopupUI<T>(string prefabName = null) where T : UI_Popup

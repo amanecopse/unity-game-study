@@ -11,6 +11,11 @@ public abstract class UI_Base : MonoBehaviour
 {
     Dictionary<Type, UnityEngine.Object[]> _objectDict = new Dictionary<Type, UnityEngine.Object[]>();//Type: 컴포넌트의 타입(Button, Text...)
 
+    protected void Start()
+    {
+        Init();
+    }
+
     protected void Bind<T>(Type enumType) where T : UnityEngine.Object//enum에 있는 이름인 컴포넌트들을 바인드한다.
     {
         string[] names = Enum.GetNames(enumType);

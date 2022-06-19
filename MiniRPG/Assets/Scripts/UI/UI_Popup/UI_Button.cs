@@ -30,11 +30,6 @@ public class UI_Button : UI_Popup
         TestObject,
     }
 
-    void Start()
-    {
-        Init();
-    }
-
     protected override void Init()
     {
         base.Init();
