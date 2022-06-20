@@ -14,6 +14,7 @@ public class PlayerController : BaseController
 
     public override void Init()
     {
+        WorldObjectType = Define.WorldObject.Player;
         _stat = gameObject.GetOrAddComponent<PlayerStat>();
         if (GetComponentInChildren<UI_HPBar>() == null)
             Manager.UI.MakeWorldSpaceUI<UI_HPBar>(parent: transform);
@@ -84,9 +85,7 @@ public class PlayerController : BaseController
         if (_targetObject != null)
         {
             Stat targetStat = _targetObject.GetComponent<Stat>();
-            PlayerStat myStat = GetComponent<PlayerStat>();
-            int damage = Mathf.Max(0, myStat.Attack - targetStat.Defense);
-            targetStat.Hp -= damage;
+            targetStat.OnAttacked(_stat);
         }
 
 

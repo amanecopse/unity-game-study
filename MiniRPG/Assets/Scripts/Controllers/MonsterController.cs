@@ -14,15 +14,16 @@ public class MonsterController : BaseController
 
     public override void Init()
     {
+        WorldObjectType = Define.WorldObject.Monster;
         _stat = gameObject.GetOrAddComponent<Stat>();
         if (GetComponentInChildren<UI_HPBar>() == null)
             Manager.UI.MakeWorldSpaceUI<UI_HPBar>(parent: transform);
-        _targetObject = GameObject.FindGameObjectWithTag("Player");
     }
 
     protected override void UpdateIdle()
     {
-        if (_targetObject == null)
+        _targetObject = Manager.Game.GetPlayer();
+        if (!_targetObject.IsValid())
             return;
         if ((_targetObject.transform.position - transform.position).magnitude < _scanRange)
         {
@@ -64,9 +65,7 @@ public class MonsterController : BaseController
         if (_targetObject != null)
         {
             Stat targetStat = _targetObject.GetComponent<Stat>();
-            Stat myStat = GetComponent<Stat>();
-            int damage = Mathf.Max(0, myStat.Attack - targetStat.Defense);
-            targetStat.Hp -= damage;
+            targetStat.OnAttacked(_stat);
 
             _dest = _targetObject.transform.position;
             if (targetStat.Hp > 0)

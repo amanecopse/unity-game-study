@@ -9,18 +9,46 @@ public class PlayerStat : Stat
     [SerializeField]
     protected int _gold;
 
-    public int Exp { get { return _exp; } set { _exp = value; } }
+    public int Exp
+    {
+        get { return _exp; }
+        set
+        {
+            _exp = value;
+            int newLevel = 1;
+            while (true)
+            {
+                Data.Stat stat;
+                if (Manager.Data.StatDict.TryGetValue(newLevel + 1, out stat) == false)
+                    break;
+                if (_exp < stat.minExp)
+                    break;
+                newLevel++;
+            }
+            if (Level != newLevel)
+            {
+                Debug.Log("level up");
+                Level = newLevel;
+            }
+        }
+    }
     public int Gold { get { return _gold; } set { _gold = value; } }
 
     private void Start()
     {
         Level = 1;
-        Hp = 100;
-        MaxHp = 100;
-        Attack = 10;
-        Defense = 5;
         MoveSpeed = 10.0f;
         Exp = 0;
         Gold = 0;
+        SetStat(Level);
+    }
+
+    void SetStat(int level)
+    {
+        Data.Stat statData = Manager.Data.StatDict[level];
+        Hp = statData.maxHp;
+        MaxHp = statData.maxHp;
+        Attack = statData.attack;
+        Defense = statData.defense;
     }
 }

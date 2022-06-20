@@ -14,6 +14,8 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     Vector3 _delta = new Vector3(0, 6, -5);
 
+    public void SetCamera(GameObject player) { _player = player; }
+
     void Start()
     {
 
@@ -23,8 +25,11 @@ public class CameraController : MonoBehaviour
     {
         if (_mode == Define.CameraMode.QuarterView)
         {
+            if (_player.IsValid() == false)
+                return;
+
             RaycastHit hit;
-            if (Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, LayerMask.GetMask("Wall")))
+            if (Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, LayerMask.GetMask("Block")))
             {
                 Vector3 dist = (hit.point - _player.transform.position) * 0.8f;
                 transform.position = _player.transform.position + dist;
