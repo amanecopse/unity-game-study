@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class GameManagerEx
 {
     GameObject _player;
     HashSet<GameObject> _monsters = new HashSet<GameObject>();
+    public Action<int> OnSpawnEvent;
 
     public GameObject GetPlayer() { return _player; }
 
@@ -20,6 +22,7 @@ public class GameManagerEx
                 break;
             case Define.WorldObject.Monster:
                 _monsters.Add(go);
+                OnSpawnEvent.Invoke(1);
                 break;
         }
 
@@ -44,7 +47,11 @@ public class GameManagerEx
                 break;
             case Define.WorldObject.Monster:
                 if (_monsters.Contains(go))
+                {
                     _monsters.Remove(go);
+                    OnSpawnEvent.Invoke(-1);
+                }
+
                 break;
         }
         Manager.Resource.Destroy(go);
